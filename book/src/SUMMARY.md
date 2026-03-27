@@ -11,8 +11,9 @@
 
 # Examples
 
-## Basics (11 examples)
+## Basics (12 examples)
 - [Overview & listing](./examples/basics.md)
+- [Storage Patterns](./examples/storage-patterns.md)
 
 ## Intermediate
 - [Multi-sig patterns](./examples/intermediate.md)

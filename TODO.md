@@ -1,32 +1,14 @@
-# Documentation Site Setup TODO
+# Task #165 Document Storage Patterns
 
-## Status: In Progress (Steps 1-2 ✅)
+## Status
+✅ Planned and approved
 
-### 1. [✅] Migrate top-level duplicates to book/src/
-   - Content already synced/identical (docs/, guides/)
-   - No migration needed
+## Steps
+- [x] 1. Create book/src/examples/storage-patterns.md with comprehensive content
+- [x] 2. Update book/src/SUMMARY.md to add storage patterns under Basics
+- [x] 3. Update book/src/examples/basics.md to expand storage-patterns section with more details
+- [x] 4. Preview with mdbook serve (book/)
+- [x] 5. Mark #165 complete and archive task
 
-### 2. [✅] Populate example summaries in book/src/examples/*.md
-   - basics.md: Detailed 11-example listing with code snippets
-   - intermediate.md: Multisig focus + placeholders
-   - advanced.md: 2 examples (multiparty, timelock) + planned
-   - defi/nfts/governance/tokens.md: Forward-looking placeholders matching SUMMARY
-
-### 3. [ ] Update book.toml (step 3)
-   - Add table-of-contents, copy-button, theme tweaks
-
-### 4. [ ] Refine SUMMARY.md (step 4)
-   - Expand examples/ sections with subdirs
-   - Verify all links resolve
-
-### 5. [ ] Enhance scripts/ (step 5)
-   - Extend build.sh for `mdbook build/serve`
-   - Create DOCS_SETUP.md at root
-
-### 6. [ ] Test locally (step 6)
-   - `cd book && mdbook serve`
-
-### 7. [ ] Deploy/Validate (step 7)
-
-### 8. [ ] Cleanup/Finalize (step 8)
-
+## Final Status
+✅ COMPLETE - Comprehensive storage patterns documentation added to book with SUMMARY/basics integration. examples/basics/02-storage-patterns/README.md already excellent/full coverage.

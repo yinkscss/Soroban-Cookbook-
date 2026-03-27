@@ -23,12 +23,29 @@ pub fn hello(env: Env, to: Symbol) -> Vec<Symbol> {
 ---
 
 ### [02-storage-patterns](../examples/basics/02-storage-patterns/)
-**All 3 storage types:** persistent, instance, temporary + TTL basics.
+**All 3 storage types** (persistent/instance/temporary) + TTL management. **Essential for all contracts.**
+
+**[Full Guide →](../storage-patterns.md)**
 
 **Key Concepts:**
-- Persistent (user data), Instance (config), Temporary (ephemeral)
-- `has()`, `get().unwrap_or()`, `extend_ttl()`
-- Typed storage keys with `#[contracttype]`
+- Persistent: user balances (per-key TTL)
+- Instance: config (shared TTL) 
+- Temporary: caches (cheapest, short-lived)
+- `has()` before `get()`, `extend_ttl(threshold, extend_to)`
+- `#[contracttype] enum DataKey`
+
+**Decision Tree:**
+```
+> few ledgers? → Temporary
+> config? → Instance
+> user data → Persistent
+```
+
+**Gas:** Temp < Instance < Persistent
+
+**Pro Tip:** Forget TTL extension → data archives!
+
+**Test:** `cargo test -p storage-patterns`
 
 ---
 
