@@ -11,9 +11,11 @@
 
 # Examples
 
-## Basics (12 examples)
+## Basics (14 examples)
 - [Overview & listing](./examples/basics.md)
 - [Storage Patterns](./examples/storage-patterns.md)
+- [Error Handling](./examples/error-handling.md)
+- [Events](./examples/events.md)
 
 ## Intermediate
 - [Multi-sig patterns](./examples/intermediate.md)

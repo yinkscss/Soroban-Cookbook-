@@ -49,6 +49,23 @@ pub fn hello(env: Env, to: Symbol) -> Vec<Symbol> {
 
 ---
 
+### [03-custom-errors](../examples/basics/03-custom-errors/)
+**Custom errors** w/ 8 variants, codes, events. **Essential.**
+
+**[Full Guide →](../error-handling.md)**
+
+**Key Concepts:**
+- `#[contracterror] #[repr(u32)] enum Error`
+- `Result<(), Error>`, `Err(MyError::Variant)`
+- Event logging on failures
+- Frontend error code mapping
+
+**Examples:** InvalidInput(1), Unauthorized(2), NotFound(3)...
+
+**Test:** `cargo test -p custom-errors`
+
+---
+
 ### [03-authentication](../examples/basics/03-authentication/)
 **Authorization & roles:** `require_auth()`, admin checks, allowances.
 
@@ -61,12 +78,28 @@ pub fn hello(env: Env, to: Symbol) -> Vec<Symbol> {
 ---
 
 ### [04-events](../examples/basics/04-events/)
-**Event emission** with query-optimized topics.
+**Structured events** (4-topic, custom payloads). **Essential for indexing.**
+
+**[Full Guide →](../events.md)** | [Quick Ref →](../04-events/EVENT_QUICK_REFERENCE.md)
 
 **Key Concepts:**
-- `env.events().publish((topics..), data)`
-- Topic layout: `(namespace, action, [entities...])`
-- Off-chain filtering patterns
+- Topics: `(events, transfer, from, to)`
+- Payloads: `#[contracttype] struct TransferData`
+- Filters: sender/receiver specific
+- Patterns: transfer/config/admin/audit
+
+**Gas:** Topics cheap; limit loops
+
+**Test:** `cargo test -p events`
+
+---
+
+### [05-error-handling](../examples/basics/05-error-handling/)
+**Result vs panic!** patterns (good/bad).
+
+**Key Concepts:**
+- `Result<T,E>` for user errors, `panic!` for invariants
+- Gas efficient, UX friendly
 
 ---
 
