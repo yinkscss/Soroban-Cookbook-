@@ -6,7 +6,7 @@ Automated CI/CD pipelines for the Soroban Cookbook project.
 
 ### [CI (Continuous Integration)](./ci.yml)
 Runs on every pull request and push to the main branch.
-- **Tasks:** Lints the codebase, checks formatting, and builds all example contracts.
+- **Tasks:** Lints the codebase, checks formatting, runs workspace tests, validates each basic example crate, builds Wasm targets, and publishes a Wasm size report (before/after `wasm-opt`).
 
 ### [Test Suite](./test.yml)
 Runs all unit and integration tests across the examples and shared tooling.
