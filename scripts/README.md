@@ -27,7 +27,7 @@ Build Soroban smart contracts.
 
 ### 🧪 test.sh
 
-Run tests for Soroban contracts with various options.
+Run tests for Soroban contracts with comprehensive options and coverage reporting.
 
 **Usage:**
 
@@ -37,6 +37,9 @@ Run tests for Soroban contracts with various options.
 
 # Test specific example
 ./scripts/test.sh examples/basics/01-hello-world
+
+# Test specific directory
+./scripts/test.sh examples/basics
 
 # Test with verbose output
 ./scripts/test.sh -v examples/basics/01-hello-world
@@ -49,6 +52,12 @@ Run tests for Soroban contracts with various options.
 
 # Test with all checks
 ./scripts/test.sh -a examples/basics/01-hello-world
+
+# Generate coverage report
+./scripts/test.sh --coverage
+
+# Show help
+./scripts/test.sh --help
 ```
 
 **Options:**
@@ -57,6 +66,16 @@ Run tests for Soroban contracts with various options.
 - `-c, --clippy` - Run clippy linter
 - `-f, --format` - Check code formatting
 - `-a, --all` - Run all checks (tests, clippy, format)
+- `--coverage` - Generate coverage report using cargo-tarpaulin
+- `-h, --help` - Show help message
+
+**Features:**
+
+- **Workspace Testing**: Uses `cargo test --workspace` for efficient testing
+- **Coverage Reporting**: Generates XML coverage reports compatible with Codecov
+- **Error Handling**: Comprehensive error checking and informative messages
+- **Flexible Targeting**: Test individual contracts, directories, or entire workspace
+- **Performance Optimized**: Uses workspace-level testing when possible
 
 ### 🚀 deploy.sh
 
