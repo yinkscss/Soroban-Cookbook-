@@ -147,8 +147,10 @@ fn test_create_user_data_name_too_long() {
     let contract_id = env.register_contract(None, TypeConversionsContract);
     let client = TypeConversionsContractClient::new(&env, &contract_id);
 
-    let long_name =
-        String::from_str(&env, "this_name_is_way_too_long_for_a_symbol_and_should_fail");
+    let long_name = String::from_str(
+        &env,
+        "this_name_is_way_too_long_for_a_symbol_and_should_fail",
+    );
     let result = client.try_create_user_data(&1u64, &long_name, &1000i128, &true);
     assert!(result.is_err());
 }
@@ -214,8 +216,7 @@ fn test_convert_bytes_to_types() {
     let input_str = "hello_world";
     let input_bytes = Bytes::from_slice(&env, input_str.as_bytes());
 
-    let (string_result, symbol_result, bytes_result) =
-        client.convert_bytes_to_types(&input_bytes);
+    let (string_result, symbol_result, bytes_result) = client.convert_bytes_to_types(&input_bytes);
 
     assert_eq!(string_result, String::from_str(&env, "hello_world"));
     assert_eq!(symbol_result, Symbol::new(&env, "hello_world"));
@@ -313,8 +314,6 @@ fn test_batch_convert_numbers() {
     input_vec.push_back(String::from_str(&env, "789"));
 
     let result = client.batch_convert_numbers(&input_vec);
-
-
 }
 
 #[test]
