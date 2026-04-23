@@ -1,6 +1,6 @@
 # Error Handling
 
-This example demonstrates proper error handling patterns in Soroban smart contracts using custom error types and the Result pattern.
+This example demonstrates proper error propagation patterns in Soroban smart contracts using custom error types, `Result<T, E>`, the `?` operator, and explicit error conversion.
 
 ## Project Structure
 
@@ -15,46 +15,80 @@ examples/basics/05-error-handling/
 
 ## What This Example Shows
 
-- Defining custom error types with `#[contracterror]`
-- Using `Result<T, Error>` return types for fallible operations
-- Error code enumeration with explicit `u32` representations
-- Testing both success and error cases
-- Client-side error handling with `try_*` methods
+- Defining contract-level and domain-level error enums
+- Returning `Result<T, Error>` for recoverable failures
+- Propagating errors with the `?` operator across helper functions
+- Converting lower-level errors into contract errors with `From`
+- Verifying bubbling behavior and conversion in tests
 
 ## Key Concepts
 
-### Custom Error Types
+### Contract Error Type
 
 The contract defines a custom error enum using the `#[contracterror]` attribute:
 
 ```rust
 #[contracterror]
-#[derive(Copy, Clone, Debug, Eq, PartialEq, PartialOrd, Ord)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
 #[repr(u32)]
 pub enum Error {
-    LimitExceeded = 1,
+    InvalidAmount = 1,
+    InsufficientBalance = 2,
+    Unauthorized = 3,
 }
 ```
 
-### Result-Based Functions
+### Domain Error + Conversion
+
+```rust
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[repr(u32)]
+pub enum MathError {
+    DivisionByZero = 10,
+}
+
+impl From<MathError> for Error {
+    fn from(value: MathError) -> Self {
+        match value {
+            MathError::DivisionByZero => Error::InvalidAmount,
+        }
+    }
+}
+```
+
+### Error Propagation with `?`
 
 Contract functions return `Result<T, Error>` to handle failures gracefully:
 
 ```rust
-pub fn hello(env: Env, count: u32) -> Result<Symbol, Error> {
-    if count > 10 {
-        return Err(Error::LimitExceeded);
+pub fn transfer(amount: u64, balance: u64) -> Result<u64, Error> {
+    Self::validate_transfer(amount, balance)?;
+    Self::subtract_balance(amount, balance)
+}
+```
+
+### Error Conversion and Bubbling
+
+```rust
+pub fn divide_checked(a: i128, b: i128) -> Result<i128, MathError> {
+    if b == 0 {
+        return Err(MathError::DivisionByZero);
     }
-    Ok(symbol_short!("Hello"))
+    Ok(a / b)
+}
+
+pub fn divide_with_conversion(a: i128, b: i128) -> Result<i128, Error> {
+    Ok(Self::divide_checked(a, b).map_err(Error::from)?)
 }
 ```
 
 ### Testing Errors
 
-The test suite demonstrates both success and error scenarios:
+The test suite demonstrates success, conversion, and bubbling scenarios:
 
-- `test_hello()` - validates successful execution
-- `test_hello_error()` - validates error handling using `try_*` client methods
+- `test_divide_checked_returns_domain_error()`
+- `test_divide_with_conversion_maps_error_to_contract_error()`
+- `test_error_bubbling_with_question_operator()`
 
 ## Build
 
@@ -78,5 +112,5 @@ cargo test -p soroban-error-handling-example
 
 ## Learn More
 
-- [Soroban Error Handling Documentation](https://soroban.stellar.org/docs/learn/errors)
-- [Custom Error Types](https://soroban.stellar.org/docs/learn/errors#custom-errors)
+- [Soroban Error Handling Documentation](https://developers.stellar.org/docs/build/smart-contracts/errors-and-debugging/debug-errors)
+- [Custom Contract Errors](https://developers.stellar.org/docs/build/smart-contracts/example-contracts/errors)
