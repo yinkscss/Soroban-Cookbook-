@@ -2,14 +2,14 @@
 
 **A comprehensive guide to building smart contracts on Stellar with Soroban**
 
-[![CI](https://github.com/Soroban-Cookbook/Soroban-Cookbook/actions/workflows/ci.yml/badge.svg)](https://github.com/Soroban-Cookbook/Soroban-Cookbook/actions/workflows/ci.yml)
-[![Test and Lint](https://github.com/Soroban-Cookbook/Soroban-Cookbook/actions/workflows/test.yml/badge.svg)](https://github.com/Soroban-Cookbook/Soroban-Cookbook/actions/workflows/test.yml)
-[![codecov](https://codecov.io/gh/Soroban-Cookbook/Soroban-Cookbook/branch/main/graph/badge.svg)](https://codecov.io/gh/Soroban-Cookbook/Soroban-Cookbook)
+[![CI](https://github.com/Soroban-Cookbook/Soroban-Cookbook-/actions/workflows/ci.yml/badge.svg)](https://github.com/Soroban-Cookbook/Soroban-Cookbook-/actions/workflows/ci.yml)
+[![Test and Lint](https://github.com/Soroban-Cookbook/Soroban-Cookbook-/actions/workflows/test.yml/badge.svg)](https://github.com/Soroban-Cookbook/Soroban-Cookbook-/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/Soroban-Cookbook/Soroban-Cookbook-/branch/main/graph/badge.svg)](https://codecov.io/gh/Soroban-Cookbook/Soroban-Cookbook-)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Table of Contents
 
-- [About](#about)
+- [Project Overview and Goals](#project-overview-and-goals)
 - [Quick Start](#quick-start)
 - [Installation](#installation)
 - [Repository Structure](#repository-structure)
@@ -20,7 +20,7 @@
 - [Additional Resources](#additional-resources)
 - [License](#license)
 
-## About
+## Project Overview and Goals
 
 The Soroban Cookbook is a community-driven developer resource for building smart contracts on the [Stellar](https://stellar.org) network using [Soroban](https://developers.stellar.org/docs/smart-contracts). It provides clear, well-documented examples and practical patterns for developers at every level — from a first "Hello World" contract to production-grade DeFi protocols.
 
@@ -32,12 +32,18 @@ Every example in this cookbook:
 - Follows Rust and Soroban best practices
 - Passes all automated CI/CD checks
 
+**Project Goals:**
+- **Education:** Provide clear, production-ready, and secure examples for Soroban developers.
+- **Acceleration:** Speed up the onboarding process for the Stellar/Soroban ecosystem.
+- **Standardization:** Establish and document best practices for smart contract architecture on Stellar.
+- **Community:** Foster a collaborative environment for developers to share patterns and solutions.
+
 ## Quick Start
 
 ```bash
 # Clone the repository
 git clone https://github.com/Soroban-Cookbook/Soroban-Cookbook-.git
-cd Soroban-Cookbook
+cd Soroban-Cookbook-
 
 # Run a basic example
 cd examples/basics/01-hello-world
@@ -79,8 +85,8 @@ stellar --version
 ### 4. Clone and verify
 
 ```bash
-git clone https://github.com/Soroban-Cookbook/Soroban-Cookbook.git
-cd Soroban-Cookbook
+git clone https://github.com/Soroban-Cookbook/Soroban-Cookbook-.git
+cd Soroban-Cookbook-
 cargo test --workspace
 ```
 
@@ -202,7 +208,6 @@ cargo build --workspace --target wasm32-unknown-unknown --release
 - [Stellar Developer Portal](https://developers.stellar.org)
 - [Soroban Rust SDK](https://github.com/stellar/rs-soroban-sdk)
 - [Stellar Community Discord](https://discord.gg/stellardev)
-- [Project Roadmap](./ROADMAP.md) - Planned phases, milestones, and KPIs
 
 ## License
 
