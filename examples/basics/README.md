@@ -113,8 +113,8 @@ General event examples and patterns.
 ---
 
 ### [instance-storage](./instance-storage/)
-Deep dive into Instance storage layer.
-- **Concepts:** Shared TTL, contract configuration, state management.
+Focused demonstration of the Instance storage layer for small contract-wide state.
+- **Concepts:** Shared instance TTL, bounded configuration, counters, persistent-storage trade-offs.
 
 ---
 
