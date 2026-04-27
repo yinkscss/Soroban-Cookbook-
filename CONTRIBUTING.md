@@ -89,7 +89,12 @@ All contributions must include tests:
 - **Unit Tests**: In `src/test.rs` for individual function logic.
 - **Integration Tests**: In `tests/` for multi-contract or complex interactions.
 - **Mocking**: Use `env.mock_all_auths()` for testing authorization flows.
-- **Coverage**: Aim for high test coverage. You can check coverage locally using `cargo tarpaulin`.
+- **Coverage**: Aim for high test coverage. Run coverage locally with:
+  ```bash
+  cargo tarpaulin
+  # Reports are written to coverage/ (XML, HTML, LCOV)
+  # Open coverage/tarpaulin-report.html in a browser for a line-by-line view
+  ```
 
 ---
 
