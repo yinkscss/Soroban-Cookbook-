@@ -1,4 +1,4 @@
-# Multi-Party Authorization Patterns
+1# Multi-Party Authorization Patterns
 
 This example demonstrates advanced multi-party authorization in Soroban,
 including N-of-N multi-sig, M-of-N threshold approval, sequential escrow,
@@ -201,9 +201,16 @@ content-addressed key to detect unauthorized signer-set changes.
 authorizations before executing the contract body. The order in which
 `require_auth()` is called within the contract does not affect correctness.
 
----
 
-## Running Tests
+## Usage Tip
+
+**Tip:** When integrating these patterns into your own contracts, always validate signer lists and thresholds at contract initialization to avoid accidental misconfiguration or security gaps. Consider providing admin functions to update signers or thresholds securely.
+
+## Clarification
+
+**Note:** The provided examples focus on demonstrating authorization logic and do not perform actual token transfers. In production, you should integrate with token contracts and handle errors and edge cases appropriately.
+
+## How to run tests
 
 ```bash
 cargo test -p multi-party-auth
