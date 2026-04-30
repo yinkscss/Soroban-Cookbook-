@@ -68,6 +68,10 @@ fn test_convert_strings_to_symbol() {
     let client = TypeConversionsContractClient::new(&env, &contract_id);
 
     let input = String::from_str(&env, "hello");
+    let (s, sym) = client.convert_strings(&input, &true);
+    assert_eq!(s, input);
+    assert_eq!(sym, Symbol::new(&env, "hello"));
+}
 
     let (string_result, symbol_result) = client.convert_strings(&input, &true);
     assert_eq!(string_result, input);
