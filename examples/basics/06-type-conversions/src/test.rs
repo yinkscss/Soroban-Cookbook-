@@ -1,3 +1,8 @@
+//! Test suite for the Type Conversions contract.
+//!
+//! Tests use the generated contract client so the full host dispatch path is
+//! exercised, matching the pattern used across the rest of the cookbook.
+
 #![cfg(test)]
 
 use super::*;
@@ -5,6 +10,13 @@ use soroban_sdk::{
     symbol_short, testutils::Address as _, Address, Bytes, Env, IntoVal, Map, String, Symbol, Val,
     Vec,
 };
+
+fn setup(env: &Env) -> TypeConversionsContractClient {
+    let id = env.register_contract(None, TypeConversionsContract);
+    TypeConversionsContractClient::new(env, &id)
+}
+
+// ── convert_numbers ───────────────────────────────────────────────────────────
 
 #[test]
 fn test_convert_numbers_success() {
@@ -47,8 +59,10 @@ fn test_convert_numbers_unsupported_type() {
     assert!(result.is_err());
 }
 
+// ── convert_strings ───────────────────────────────────────────────────────────
+
 #[test]
-fn test_convert_strings() {
+fn test_convert_strings_to_symbol() {
     let env = Env::default();
     let contract_id = env.register_contract(None, TypeConversionsContract);
     let client = TypeConversionsContractClient::new(&env, &contract_id);
@@ -64,23 +78,45 @@ fn test_convert_strings() {
 }
 
 #[test]
-fn test_convert_collections() {
+fn test_convert_strings_from_symbol() {
     let env = Env::default();
     let contract_id = env.register_contract(None, TypeConversionsContract);
     let client = TypeConversionsContractClient::new(&env, &contract_id);
 
-    let mut input_vec = Vec::new(&env);
-    input_vec.push_back(1i32);
-    input_vec.push_back(-2i32);
-    input_vec.push_back(100i32);
+#[test]
+#[should_panic(expected = "InvalidStringFormat")]
+fn test_convert_strings_too_long() {
+    let env = Env::default();
+    // 33 characters — exceeds Symbol limit of 32
+    let long = String::from_str(&env, "this_string_is_thirty_three_chars_!");
+    setup(&env).convert_strings(&long, &true);
+}
 
     let result = client.convert_collections(&input_vec);
 
+#[test]
+fn test_convert_collections() {
+    let env = Env::default();
+    let client = setup(&env);
+    let mut input = Vec::new(&env);
+    input.push_back(1i32);
+    input.push_back(-2i32);
+    input.push_back(100i32);
+    let result = client.convert_collections(&input);
     assert_eq!(result.len(), 3);
     assert_eq!(result.get(0).unwrap(), 1i64);
     assert_eq!(result.get(1).unwrap(), -2i64);
     assert_eq!(result.get(2).unwrap(), 100i64);
 }
+
+#[test]
+fn test_convert_collections_empty() {
+    let env = Env::default();
+    let input: Vec<i32> = Vec::new(&env);
+    assert_eq!(setup(&env).convert_collections(&input).len(), 0);
+}
+
+// ── safe_conversions ──────────────────────────────────────────────────────────
 
 #[test]
 fn test_safe_conversions_success() {
@@ -110,7 +146,7 @@ fn test_safe_conversions_success() {
 }
 
 #[test]
-fn test_safe_conversions_failure() {
+fn test_safe_conversions_type_mismatch() {
     let env = Env::default();
     let contract_id = env.register_contract(None, TypeConversionsContract);
     let client = TypeConversionsContractClient::new(&env, &contract_id);
@@ -125,6 +161,7 @@ fn test_safe_conversions_failure() {
     assert!(!success);
     assert_eq!(result, -1);
 }
+// ── create_user_data ──────────────────────────────────────────────────────────
 
 #[test]
 fn test_create_user_data_success() {
@@ -166,6 +203,8 @@ fn test_create_user_data_negative_balance() {
     assert!(result.is_err());
 }
 
+// ── convert_val_to_config ─────────────────────────────────────────────────────
+
 #[test]
 fn test_convert_val_to_config() {
     let env = Env::default();
@@ -174,20 +213,12 @@ fn test_convert_val_to_config() {
 
     let admin = Address::generate(&env);
     let mut features = Vec::new(&env);
-    features.push_back(symbol_short!("feature1"));
-    features.push_back(symbol_short!("feature2"));
-
-    let mut val_data = Map::new(&env);
-    val_data.set(Symbol::new(&env, "max_users"), 100u32.into_val(&env));
-    val_data.set(Symbol::new(&env, "fee_rate"), 250u64.into_val(&env));
-    val_data.set(Symbol::new(&env, "admin"), admin.clone().into_val(&env));
-    val_data.set(
-        Symbol::new(&env, "features"),
-        features.clone().into_val(&env),
-    );
+    features.push_back(symbol_short!("feat1"));
+    features.push_back(symbol_short!("feat2"));
 
     let config = client.convert_val_to_config(&val_data);
 
+    let config = client.convert_val_to_config(&map);
     assert_eq!(config.max_users, 100);
     assert_eq!(config.fee_rate, 250);
     assert_eq!(config.admin, admin);
@@ -207,6 +238,8 @@ fn test_convert_val_to_config_missing_field() {
     assert!(result.is_err());
 }
 
+// ── convert_bytes_to_types ────────────────────────────────────────────────────
+
 #[test]
 fn test_convert_bytes_to_types() {
     let env = Env::default();
@@ -222,6 +255,8 @@ fn test_convert_bytes_to_types() {
     assert_eq!(symbol_result, Symbol::new(&env, "hello_world"));
     assert_eq!(bytes_result, input_bytes);
 }
+
+// ── validate_and_convert ──────────────────────────────────────────────────────
 
 #[test]
 fn test_validate_and_convert_number() {
@@ -301,8 +336,10 @@ fn test_validate_and_convert_unsupported_type() {
     assert!(result.is_err());
 }
 
+// ── batch_convert_numbers ─────────────────────────────────────────────────────
+
 #[test]
-fn test_batch_convert_numbers() {
+fn test_batch_convert_numbers_mixed() {
     let env = Env::default();
     let contract_id = env.register_contract(None, TypeConversionsContract);
     let client = TypeConversionsContractClient::new(&env, &contract_id);
@@ -332,7 +369,7 @@ fn test_batch_convert_numbers_all_invalid() {
 }
 
 #[test]
-fn test_sum_different_types() {
+fn test_batch_convert_numbers_empty_input() {
     let env = Env::default();
     let contract_id = env.register_contract(None, TypeConversionsContract);
     let client = TypeConversionsContractClient::new(&env, &contract_id);
@@ -341,8 +378,10 @@ fn test_sum_different_types() {
     assert_eq!(result, 50i128);
 }
 
+// ── sum_different_types ───────────────────────────────────────────────────────
+
 #[test]
-fn test_val_roundtrip() {
+fn test_sum_different_types() {
     let env = Env::default();
     let contract_id = env.register_contract(None, TypeConversionsContract);
     let client = TypeConversionsContractClient::new(&env, &contract_id);
@@ -353,7 +392,7 @@ fn test_val_roundtrip() {
 }
 
 #[test]
-fn test_complex_conversion_workflow() {
+fn test_val_roundtrip() {
     let env = Env::default();
     let contract_id = env.register_contract(None, TypeConversionsContract);
     let client = TypeConversionsContractClient::new(&env, &contract_id);
@@ -371,8 +410,10 @@ fn test_complex_conversion_workflow() {
     assert_eq!(sum_result, 300);
 }
 
+// ── integration ───────────────────────────────────────────────────────────────
+
 #[test]
-fn test_val_conversion_roundtrip() {
+fn test_val_conversion_roundtrip_via_safe_conversions() {
     let env = Env::default();
     let contract_id = env.register_contract(None, TypeConversionsContract);
     let client = TypeConversionsContractClient::new(&env, &contract_id);
@@ -386,7 +427,7 @@ fn test_val_conversion_roundtrip() {
 }
 
 #[test]
-fn test_error_handling_patterns() {
+fn test_complex_conversion_workflow() {
     let env = Env::default();
     let contract_id = env.register_contract(None, TypeConversionsContract);
     let client = TypeConversionsContractClient::new(&env, &contract_id);
