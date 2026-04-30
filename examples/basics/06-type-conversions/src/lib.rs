@@ -76,6 +76,7 @@ impl TypeConversionsContract {
     /// Panics with `"NumericOverflow"` when the value is out of range for the
     /// target type, or `"UnsupportedConversion"` for unknown `target_type`.
     pub fn convert_numbers(_env: Env, value: i128, target_type: u32) -> i128 {
+        let _ = _env; // Suppress unused parameter warning
         match target_type {
             // TryInto<u32>: rejects negatives and values > u32::MAX
             1 => {
@@ -131,10 +132,10 @@ impl TypeConversionsContract {
         }
 
         if to_symbol {
-            // Convert String → Symbol by going through a known-good literal.
-            // The host String is opaque in no_std; the idiomatic pattern is to
-            // keep a canonical &str and construct both types from it.
-            let symbol = Symbol::new(&env, "hello");
+            // Convert String to Symbol (limited to 32 chars)
+            // We need to convert String to &str first
+            let input_str = "hello"; // Simplified for demo - in real code you'd extract from String
+            let symbol = Symbol::new(&env, input_str);
             (input, symbol)
         } else {
             // Demonstrate Symbol → String direction.
@@ -215,6 +216,8 @@ impl TypeConversionsContract {
         balance: i128,
         active: bool,
     ) -> UserData {
+        let _ = _env; // Suppress unused parameter warning
+        // Validate name length (Symbol limitation)
         if name.len() > 32 {
             panic!("InvalidStringFormat");
         }
@@ -410,9 +413,10 @@ impl TypeConversionsContract {
     /// # Returns
     /// Sum of the two inputs as `i128`.
     pub fn sum_different_types(_env: Env, input_u32: u32, input_i64: i64) -> i128 {
-        let a: i128 = input_u32.into(); // From<u32> for i128
-        let b: i128 = input_i64.into(); // From<i64> for i128
-        a + b
+        let _ = _env; // Suppress unused parameter warning
+        let converted_u32: i128 = input_u32.into();
+        let converted_i64: i128 = input_i64.into();
+        converted_u32 + converted_i64
     }
 
     /// Demonstrates a full `u32` → `Val` → `u32` roundtrip.
